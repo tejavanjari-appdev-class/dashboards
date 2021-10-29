@@ -18,6 +18,14 @@ class CurrenciesController < ApplicationController
     parsed_json = JSON.parse(json)
     @array_of_symbols = parsed_json.fetch('symbols').keys
     render({:template => "currency_templates/step_two.html.erb"})
+  end
 
+  def conversion
+    @from_currency = params.fetch('from_currency')
+    @to_currency = params.fetch('to_currency')
+    url = "https://api.exchangerate.host/convert?from="+ @from_currency + "&to=" + @to_currency
+    parsed_json = JSON.parse(open(url).read)
+    @rate = parsed_json.fetch('info').fetch('rate')
+    render({:template => "currency_templates/step_three.html.erb"})
   end
 end
